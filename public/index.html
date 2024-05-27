@@ -1,0 +1,75 @@
+<html>
+
+<head>
+  <title>月底吃什麼</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+
+<body>
+  <h1>月底吃什麼</h1>
+  <h3>泡麵加雙蛋，展現你的尊爵不凡 !</h3>
+
+  <form >
+    <label for="year">年份</label>
+    <input type="text" id="year" name="year"><br><br>
+    <label for="Uni_Instant_Noodles_packet">統一肉燥麵</label>
+    <input type="number" id="Uni_Instant_Noodles_packet" name="Uni_Instant_Noodles_packet"><br><br>
+    <label for="Egg_piece">蛋價</label>
+    <input type="number" id="Egg_piece" name="Egg_piece"><br><br>
+    <input type="submit" value="Submit">
+  </form>
+
+  <p id="without_money_meal"></p>
+  <script>
+    document.getElementById('without_money_meal').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const year = document.getElementById('year').value;
+      const Uni_Instant_Noodles_packet = document.getElementById('Uni_Instant_Noodles_packet').value;
+      const Egg_piece = document.getElementById('Egg_piece').value;
+      const res = await fetch('/api/insert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({year, Uni_Instant_Noodles_packet, Egg_piece})
+      });
+      const data = await res.text();
+      document.getElementById('without_money_meal').innerText = data;
+    });
+  </script>
+
+
+  <button id="showdata">顯示資料</button>
+  <table id="data">
+    <tr>
+      <th>年份</th>
+      <th>統一肉燥麵</th>
+      <th>雞蛋</th>
+    </tr>
+  </table>
+
+  <script>
+    document.getElementById('showdata').addEventListener('click', async () => {
+      const response = await fetch('/api/meal');
+      const data = await response.json();
+      const table = document.getElementById('data');
+      data.forEach((item) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+                <td>${item.year}</td>
+                <td>${item.Uni_Instant_Noodles_packet}</td>
+                <td>${item.Egg_piece}</td>
+            `;
+        table.appendChild(row);
+      });
+    });
+
+  </script>
+
+
+
+
+
+</body>
+
+</html>
